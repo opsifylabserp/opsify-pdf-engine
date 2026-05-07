@@ -41,15 +41,19 @@ module.exports = async function handler(req, res) {
     // 4. GENERATE: Print the perfect PDF
     const pdfBuffer = await page.pdf({
       format: 'A4',
-      printBackground: true, // Forces your blue headers to print!
-      margin: { top: '0px', right: '0px', bottom: '0px', left: '0px' } // Zero margin since our HTML has its own padding
+      printBackground: true, 
+      margin: { top: '0px', right: '0px', bottom: '0px', left: '0px' } 
     });
 
     await browser.close();
 
-    // 5. Send the PDF back to Google Apps Script
-    res.setHeader('Content-Type', 'application/pdf');
-    res.send(pdfBuffer);
+    // 5. THE FIX: Convert binary PDF to Base64 String before sending
+    const base64Pdf = pdfBuffer.toString('base64');
+    
+    res.status(200).json({ 
+      success: true, 
+      base64: base64Pdf 
+    });
 
   } catch (error) {
     console.error("PDF Engine Error:", error);
