@@ -35,7 +35,7 @@ module.exports = async function handler(req, res) {
 
     await browser.close();
 
-    // 4. THE FIX: Send the raw, native binary PDF buffer directly to the browser
+    // 4. Send the raw, native binary PDF buffer directly to the browser
     res.setHeader('Content-Type', 'application/pdf');
     res.send(pdfBuffer);
 
